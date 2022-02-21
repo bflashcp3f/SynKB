@@ -1,0 +1,324 @@
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+<!----------------------------------- MAIN BODY -------------------------------------->
+
+<head>
+    <meta charset="UTF-8">
+    <title>SynKB: Semantic Search for Chemical Synthesis Procedures</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SD69PF26BG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-SD69PF26BG');
+    </script>
+</head>
+
+<!--<style>-->
+<!--  span {-->
+<!--  background-color: #FFFF00;-->
+<!--}-->
+<!--</style>-->
+
+<body>
+
+  <div class="container" id="uncertainty"><!--TITLE-->
+
+    <div align="center">
+        <br><a href="http://sdl898-ritter2.cse.ohio-state.edu:8256"><h3>SynKB: Semantic Search for Chemical Synthesis Procedures</h3></a><br>
+    </div>
+
+    <!--Instructions-->
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-success"><!--example heading-->
+                <div class="panel-heading"><strong>How To Use</strong></div>
+                <div class="panel-body">
+
+                    <h5> <u>Example Queries</u> </h5>
+                    <p>1. What are the solvents used for reactions containing the reagent triphosgene?</p>
+                    <p><a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=&product=&reagent=triphosgene&solvent=%3F&other_compound=&starting_material=&temperature=&time=&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Slot Search: {"Reagent":"triphosgene", "Solvent":"?"}</b></a></p>
+                    <p>2. What are the reaction times for reactions using CDI (carbonyldiimidazole)?</p>
+                    <p><a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=&product=&reagent=CDI+OR+carbonyldiimidazole&solvent=&other_compound=&starting_material=&temperature=&time=%3F&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Slot Search: {"Reagent":"CDI OR carbonyldiimidazole", "Reaction Time":"?"}</b></a></p>
+                    <p>3. What molar concentration is the reagent HATU at when dissolved in the solvent DMF?</p>
+                    <p> <a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=HATU+%3Emeasure+%28%3F%3Cmole%3E+%5B%5D+%5Bword%3Dmmol%7Cword%3Dmol%5D%29+%5B%5D%7B1%2C10%7D+DMF+%3Emeasure+%28%3F%3Cvolume%3E+%5B%5D+%5Bword%3Dml%7Cword%3Dl%5D%29&product=&reagent=&solvent=&other_compound=&starting_material=&temperature=&time=&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Parse Search: HATU >measure (?&lt;mole> [] [word=mmol|word=mol]) []{1,10} DMF >measure (?&lt;volume> [] [word=ml|word=l])</b></a> </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-info"><!--example heading-->
+                <div class="panel-heading"><strong>Enter Your Search Query</strong></div>
+                <div class="panel-body">
+                    <form action="{% url 'search_results' %}" method="get">
+
+                        <h5><u>Semantic Slot Search:</u></h5>
+                        <div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="product" class="control-label">Product</label>
+                                {% if not product_str %}
+                                    <input id="product" name="product" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="product" name="product" type="text" class="form-control" value="{{product_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="reagent" class="control-label">Reagent</label>
+                                {% if not reagent_str %}
+                                    <input id="reagent" name="reagent" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="reagent" name="reagent" type="text" class="form-control" value="{{reagent_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="solvent" class="control-label">Solvent</label>
+                                {% if not solvent_str %}
+                                    <input id="solvent" name="solvent" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="solvent" name="solvent" type="text" class="form-control" value="{{solvent_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="other_compound" class="control-label">Other Compound</label>
+                                {% if not other_compound_str %}
+                                    <input id="other_compound" name="other_compound" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="other_compound" name="other_compound" type="text" class="form-control" value="{{other_compound_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="starting_material" class="control-label">Starting Material</label>
+                                {% if not starting_material_str %}
+                                    <input id="starting_material" name="starting_material" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="starting_material" name="starting_material" type="text" class="form-control" value="{{starting_material_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="temperature" class="control-label">Temperature</label>
+                                {% if not temperature_str %}
+                                    <input id="temperature" name="temperature" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="temperature" name="temperature" type="text" class="form-control" value="{{temperature_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="time" class="control-label">Reaction Time</label>
+                                {% if not time_str %}
+                                    <input id="time" name="time" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="time" name="time" type="text" class="form-control" value="{{time_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="yother" class="control-label">Yield Other</label>
+                                {% if not yield_other_str %}
+                                    <input id="yother" name="yother" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="yother" name="yother" type="text" class="form-control" value="{{yield_other_str}}"/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="ypercent" class="control-label">Yield Percent</label>
+                                {% if not yield_percent_str %}
+                                    <input id="ypercent" name="ypercent" type="text" class="form-control" placeholder=""/>
+                                {% else %}
+                                    <input id="ypercent" name="ypercent" type="text" class="form-control" value="{{yield_percent_str}}"/>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h5><u>Semantic Parse Search:</u></h5>
+                        {% if not query %}
+                            <input name="q" type="text" class="form-control" placeholder=""> <br>
+                        {% else %}
+                            <input name="q" type="text" class="form-control" value="{{query}}"> <br>
+                        {% endif %}
+
+                        <h5><u> Other setups:</u></h5>
+                        <p>
+                        Which corpus would you like to search from?
+                        <select name="corpus_src">
+                            {% if corpus_src == "Chemical patents" %}
+                              <option>PubMed articles</option>
+                              <option selected>Chemical patents</option>
+                            {% elif corpus_src == "PubMed articles" %}
+                              <option selected>PubMed articles</option>
+                              <option>Chemical patents</option>
+                            {% endif %}
+                        </select>
+                        </p>
+                      <button type='submit' class="btn btn-primary">Search</button>
+                    </form>
+                    <form action="{% url 'download_results' %}" method="get">
+                      <input name="q" type="hidden" class="form-control" value="{{query}}">
+                      <input name="corpus_src" type="hidden" class="form-control" value="{{corpus_src}}">
+                      <input name="reagent" type="hidden" class="form-control" value="{{reagent_str}}"/>
+                      <input name="reagent" type="hidden" class="form-control" value="{{reagent_str}}"/>
+                      <input name="solvent" type="hidden" class="form-control" value="{{solvent_str}}"/>
+                      <input name="other_compound" type="hidden" class="form-control" value="{{other_compound_str}}"/>
+                      <input name="starting_material" type="hidden" class="form-control" value="{{starting_material_str}}"/>
+                      <input name="temperature" type="hidden" class="form-control" value="{{temperature_str}}"/>
+                      <input name="time" type="hidden" class="form-control" value="{{time_str}}"/>
+                      <input name="yother" type="hidden" class="form-control" value="{{yield_other_str}}"/>
+                      <input name="ypercent" type="hidden" class="form-control" value="{{yield_percent_str}}"/>
+                      <button type='submit' class="btn btn-primary">Download Results (csv)</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-info">
+                  <div class="panel-heading"><strong>Search Results</strong></div>
+
+                 {% for capture in capture_list %}
+                      <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample{{forloop.counter}}" >
+                        {% for each_cap in capture.0 %}
+                          <span class="buttontext">{{ each_cap|safe }}</span> <br>
+                        {% endfor %}
+                        <span class="buttontext"> count: {{ capture.1 }}</span>
+                    </button>
+                        <div class="collapse" id="collapseExample{{forloop.counter}}">
+                            <div class="panel-body">
+                            <table class="table table-striped table-condensed" style="table-layout:fixed;">
+                              <thead>
+                                <tr class="row">
+                                    <th class="timestamp"> DocID </th>
+                                    <th class="text"> Matched Paragraph </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for each_sen in capture.2 %}
+                                  <tr class="row">
+                                      {% if corpus_src == "PubMed articles" %}
+                                        <td> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/{{each_sen.0}}/" target="_blank" rel="noopener noreferrer">{{ each_sen.0 }}</a> </td>
+                                      {% elif corpus_src == "Chemical patents" %}
+                                        <td> {{ each_sen.0 }} </td>
+                                      {% endif %}
+                                      <td> {{ each_sen.1|safe }} </td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                 {% endfor %}
+
+             </div>
+        </div>
+    </div>
+
+  </div>
+
+</body>
+
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet" />
+
+<style class="darkreader darkreader--sync" media="screen" type="text/css">
+</style>
+
+<!-- Open internal style sheet -->
+<style type="text/css">
+    table {
+  width: 100%;
+}
+    th.timestamp{
+      width: 15%
+    }
+    th.text {
+      width: 85%; /* Not necessary, since only 70% width remains */
+    }
+
+
+    #collapseTrigger{
+	/*color:#fff;*/
+	display: block;
+	text-decoration: none;
+}
+#exampleColTrigger{
+	/*color:#fff;*/
+	display: block;
+	text-decoration: none;
+}
+#submitButton{
+	white-space: normal;
+}
+#instructionBody table{
+	font-size: 14px;
+	margin-top: 10px;
+}
+#instructionBody table caption{
+	text-align: left;
+	padding: 0 0 5px 0;
+}
+#exampleBody table{
+	font-size: 14px;
+	margin-top: 10px;
+}
+#exampleBody table caption{
+	text-align: left;
+	padding: 0 0 5px 0;
+}
+#Inputs{
+	display: block;
+	margin-top: 10px;
+}
+.buttontext{
+  float: left;
+  clear: left;
+}
+.content{
+	margin-bottom: 15px;
+}
+.radio:first-of-type{
+	margin-top: -5px;
+}
+.empty {
+	padding:10px 0
+}
+.alignLeft{
+	text-align: left;
+}
+.question{
+	background-color:#d7d7d7;
+	font-size:17px;
+	font-family:verdana,geneva,sans-serif;
+}
+.btn{
+    background: whitesmoke;
+    color: black;
+	width: 100%;
+}
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>
+<!-- Close internal style sheet -->
+<!-- External JS references -->
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"
+		integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+		crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous">
+</script>
+
+</html>

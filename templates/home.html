@@ -1,0 +1,246 @@
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+<!----------------------------------- MAIN BODY -------------------------------------->
+
+<head>
+    <meta charset="UTF-8">
+    <title>SynKB: Semantic Search for Chemical Synthesis Procedures</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SD69PF26BG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-SD69PF26BG');
+    </script>
+</head>
+
+<body>
+
+<div class="container" id="uncertainty"><!--TITLE-->
+
+    <div align="center">
+        <br><h3>SynKB: Semantic Search for Chemical Synthesis Procedures</h3><br>
+    </div>
+
+    <!--Instructions-->
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-success"><!--example heading-->
+                <div class="panel-heading"><strong>How To Use</strong></div>
+                <div class="panel-body">
+
+                    <h5> <u>Example Queries</u> </h5>
+                    <p>1. What are the solvents used for reactions containing the reagent triphosgene?</p>
+                    <p><a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=&product=&reagent=triphosgene&solvent=%3F&other_compound=&starting_material=&temperature=&time=&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Slot Search: {"Reagent":"triphosgene", "Solvent":"?"}</b></a></p>
+                    <p>2. What are the reaction times for reactions using CDI (carbonyldiimidazole)?</p>
+                    <p><a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=&product=&reagent=CDI+OR+carbonyldiimidazole&solvent=&other_compound=&starting_material=&temperature=&time=%3F&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Slot Search: {"Reagent":"CDI OR carbonyldiimidazole", "Reaction Time":"?"}</b></a></p>
+                    <p>3. What molar concentration is the reagent HATU at when dissolved in the solvent DMF?</p>
+                    <p> <a href="http://sdl898-ritter2.cse.ohio-state.edu:8256/search_results/?q=HATU+%3Emeasure+%28%3F%3Cmole%3E+%5B%5D+%5Bword%3Dmmol%7Cword%3Dmol%5D%29+%5B%5D%7B1%2C10%7D+DMF+%3Emeasure+%28%3F%3Cvolume%3E+%5B%5D+%5Bword%3Dml%7Cword%3Dl%5D%29&product=&reagent=&solvent=&other_compound=&starting_material=&temperature=&time=&yother=&ypercent=&corpus_src=Chemical+patents"><b>Semantic Parse Search: HATU >measure (?&lt;mole> [] [word=mmol|word=mol]) []{1,10} DMF >measure (?&lt;volume> [] [word=ml|word=l])</b></a> </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-info"><!--example heading-->
+                <div class="panel-heading"><strong>Enter Your Search Query</strong></div>
+                <div class="panel-body">
+                    <form action="{% url 'search_results' %}" method="get">
+
+                        <h5><u>Semantic Slot Search:</u></h5>
+                        <div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="product" class="control-label">Product</label>
+                                <input id="product" type="text" value='' class="form-control" name="product">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="reagent" class="control-label">Reagent</label>
+                                <input id="reagent" type="text" value='' class="form-control" name="reagent" >
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="solvent" class="control-label">Solvent</label>
+                                <input id="solvent" type="text" value='' class="form-control" name="solvent">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="other_compound" class="control-label">Other Compound</label>
+                                <input id="other_compound" type="text" value='' class="form-control" name="other_compound">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="starting_material" class="control-label">Starting Material</label>
+                                <input id="starting_material" type="text" value='' class="form-control" name="starting_material">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="temperature" class="control-label">Temperature</label>
+                                <input id="temperature" type="text" value='' class="form-control" name="temperature">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="time" class="control-label">Reaction Time</label>
+                                <input id="time" type="text" value='' class="form-control" name="time">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="yother" class="control-label">Yield Other</label>
+                                <input id="yother" type="text" value='' class="form-control" name="yother">
+                            </div>
+                            <div class="form-group col-xs-4 col-md-4">
+                                <label for="ypercent" class="control-label">Yield Percent</label>
+                                <input id="ypercent" type="text" value='' class="form-control" name="ypercent">
+                            </div>
+                        </div>
+
+                        <h5><u>Semantic Parse Search:</u></h5>
+                        <input name="q" type="text" class="form-control" placeholder=""> <br>
+
+                        <h5><u> Other setups:</u></h5>
+                        <p>
+                        Which corpus would you like to search from?
+                        <select name="corpus_src">
+                            <option>Chemical patents</option>
+                            <option>PubMed articles</option>
+                        </select>
+                        </p>
+                        <p>
+<!--                        How many top captures would you like to see?-->
+<!--                        <select name="cap_num">-->
+<!--                            <option>10</option>-->
+<!--                            <option>100</option>-->
+<!--                        </select>-->
+                        </p>
+                      <button type='submit' class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+		    <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+			    <div class="panel panel-info">
+                        <div class="panel-heading"><strong>Search Results</strong></div>
+                        <div class="panel-body">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/lodash"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+    <script language="javascript">
+        var today = new Date().toISOString().split("T")[0];
+    </script>
+
+
+
+</body>
+
+<!----------------------------------- OTHER STUFF -------------------------------------->
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet" />
+
+<style class="darkreader darkreader--sync" media="screen" type="text/css">
+</style>
+
+<!-- Open internal style sheet -->
+<style type="text/css">
+    table {
+  width: 100%;
+}
+    th.timestamp{
+      width: 15%
+    }
+    th.text {
+      width: 85%; /* Not necessary, since only 70% width remains */
+    }
+
+
+    #collapseTrigger{
+	/*color:#fff;*/
+	display: block;
+	text-decoration: none;
+}
+#exampleColTrigger{
+	/*color:#fff;*/
+	display: block;
+	text-decoration: none;
+}
+#submitButton{
+	white-space: normal;
+}
+#instructionBody table{
+	font-size: 14px;
+	margin-top: 10px;
+}
+#instructionBody table caption{
+	text-align: left;
+	padding: 0 0 5px 0;
+}
+#exampleBody table{
+	font-size: 14px;
+	margin-top: 10px;
+}
+#exampleBody table caption{
+	text-align: left;
+	padding: 0 0 5px 0;
+}
+
+input, label {
+    display:block;
+}
+/*#Inputs{*/
+/*	display: block;*/
+/*	margin-top: 10px;*/
+/*}*/
+.content{
+	margin-bottom: 15px;
+}
+.radio:first-of-type{
+	margin-top: -5px;
+}
+.empty {
+	padding:10px 0
+}
+.alignLeft{
+	text-align: left;
+}
+.question{
+	background-color:#d7d7d7;
+	font-size:17px;
+	font-family:verdana,geneva,sans-serif;
+}
+.btn{
+    background: whitesmoke;
+    color: black;
+	width: 100%;
+}
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>
+<!-- Close internal style sheet -->
+<!-- External JS references -->
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"
+		integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+		crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous">
+</script>
