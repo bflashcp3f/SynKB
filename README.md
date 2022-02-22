@@ -10,6 +10,7 @@ Demo URL: [https://tinyurl.com/synkb](https://tinyurl.com/synkb)\
 Introduction video: [https://screencast-o-matic.com/watch/c3n6DTVDSTY](https://screencast-o-matic.com/watch/c3n6DTVDSTY)
 
 ## Installation
+<!-- To enable all search features, we need to set up Odinson and Elasticsearch in the backend. -->
 
 ### Create conda environment
 ```
@@ -20,29 +21,38 @@ conda activate synkb
 ```
 
 ### Set up Odinson search
+
+1. Clone the Odinson repo
+
 ```
-# Clone the Odinson repo
-cd ..
 git clone https://github.com/lum-ai/odinson.git
 cd odinson
 git checkout 9522ab65d3be2974b
+```
 
-# Setup index path
+2. Set up indexed data path
+```
 mkdir -p extra/data/pets/
 cd extra/data/pets/
+```
 
-# Download index.tar.gz () and extract files
+3. Download indexed data ([index.tar.gz](https://drive.google.com/file/d/1SHmgaSpuCNKQJoc-RwetDzNopoeNSOLG/view?usp=sharing)) and extract files
+```
 tar –xvzf index.tar.gz
+```
 
-# Launch Odinson
+4. Launch Odinson
+```
 cd ../../../
 sbt backend/run
 ```
 
 ### Set up Elasticsearch
-Download Elasticsearch folder including data bucks via the [link]().
+
+1. Download Elasticsearch folder including data bucks via the [link]().
+
+2. Launch Elasticsearch
 ```
-# Launch Elasticsearch
 ./bin/elasticsearch
 ```
 
