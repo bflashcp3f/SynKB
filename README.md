@@ -8,7 +8,12 @@ This repo provides the code and data to replicate our demo SynKB ([tinyurl.com/s
 ## Installation
 
 ### Create conda environment
-
+```
+git clone https://github.com/bflashcp3f/SynKB.git
+cd SynKB
+conda env create -f environment.yml
+conda activate synkb
+```
 
 ### Set up Odinson search
 
@@ -21,4 +26,8 @@ This repo provides the code and data to replicate our demo SynKB ([tinyurl.com/s
 
 ### Launch the demo
 
+```py
+cd SynKB
+python manage.py runserver YOUR_PORT_NUMBER
+```
 
