@@ -31,7 +31,7 @@ def build_odinson_query(input_str, corpus_source="PubMed articles"):
     if corpus_source == "PubMed articles":
         return f"http://localhost:8999/api/execute/pattern?{param_str}"
     else:
-        return f"http://localhost:8997/api/execute/pattern?{param_str}"
+        return f"http://localhost:9000/api/execute/pattern?{param_str}"
 
 
 def build_odinson_query_w_meta(input_str, chemu_filter):
@@ -44,7 +44,7 @@ def build_odinson_query_w_meta(input_str, chemu_filter):
 
     param_str = urllib.parse.urlencode({"odinsonQuery": input_str, 'metadataQuery': meta_query_all})
 
-    return f"http://localhost:8997/api/execute/pattern?{param_str}"
+    return f"http://localhost:9000/api/execute/pattern?{param_str}"
 
 
 # Control the length of the presented captures

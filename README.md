@@ -38,10 +38,10 @@ cd extra/data/pets/
 
 3. Download indexed data ([index.tar.gz](https://drive.google.com/file/d/1SHmgaSpuCNKQJoc-RwetDzNopoeNSOLG/view?usp=sharing)) and extract files
 ```
-tar –xvzf index.tar.gz
+tar -xvzf index.tar.gz
 ```
 
-4. Launch Odinson
+4. Launch Odinson (Java 11 is required)
 ```
 cd ../../../
 sbt backend/run
