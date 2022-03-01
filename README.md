@@ -36,7 +36,7 @@ mkdir -p extra/data/pets/
 cd extra/data/pets/
 ```
 
-3. Download indexed data ([index.tar.gz](https://drive.google.com/file/d/1SHmgaSpuCNKQJoc-RwetDzNopoeNSOLG/view?usp=sharing)) and extract files
+3. Download indexed data ([index.tar.gz](https://drive.google.com/file/d/1ZOqvuPqftbaIAI_omQb8R53Mrr21YEWk/view?usp=sharing)) and extract files
 ```
 tar -xvzf index.tar.gz
 ```
