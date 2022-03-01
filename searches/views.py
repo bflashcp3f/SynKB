@@ -53,7 +53,7 @@ def length_control(str_list, length_list=120):
 
 
 def build_elasticsearch_query(chemu_input):
-    # return f"http://localhost:9201/chemu/_search?q=product:{prod_str}%20AND%20reagent:{reag_str}%20AND%20solvent:{solv_str}&size=500000"
+    # return f"http://localhost:9300/chemu/_search?q=product:{prod_str}%20AND%20reagent:{reag_str}%20AND%20solvent:{solv_str}&size=500000"
 
     parameter_list = []
     for chemu_item, chemu_value in chemu_input.items():
@@ -62,7 +62,7 @@ def build_elasticsearch_query(chemu_input):
 
     parameter_str = "%20AND%20".join(parameter_list)
 
-    return f"http://localhost:9201/chemu/_search?q={parameter_str}&size=10000"
+    return f"http://localhost:9300/chemu/_search?q={parameter_str}&size=10000"
 
 
 def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
@@ -215,7 +215,7 @@ def aggregate_captures_es_ids(odin_results, chemu_input, capture_num=50):
 
     es_id_dict = {each_hit['_id']: each_hit['_source'] for each_id in docid_dict_odin.keys()
                   for each_hit in
-                  requests.get(f"http://localhost:9201/chemu/_search?q=id:{each_id}").json()['hits']['hits']}
+                  requests.get(f"http://localhost:9300/chemu/_search?q=id:{each_id}").json()['hits']['hits']}
 
     captures_all = []
     captures_sen_dict = defaultdict(list)

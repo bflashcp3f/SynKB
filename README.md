@@ -25,9 +25,9 @@ conda activate synkb
 1. Clone the Odinson repo
 
 ```
-git clone https://github.com/lum-ai/odinson.git
+git clone https://github.com/bflashcp3f/odinson.git
 cd odinson
-git checkout 9522ab65d3be2974b
+git checkout synkb
 ```
 
 2. Set up indexed data path
@@ -49,10 +49,14 @@ sbt backend/run
 
 ### Set up Elasticsearch
 
-1. Download Elasticsearch folder including data bucks via the [link]().
+1. Download Elasticsearch folder including data bucks ([elastic_data.tar.gz](https://drive.google.com/file/d/1eie6pEMN31n3D7R3mOOrz420s-2YVfSW/view?usp=sharing)) and extract files.
+```
+tar -xvzf elastic_data.tar.gz
+```
 
 2. Launch Elasticsearch
 ```
+cd elasticsearch-6.8.19
 ./bin/elasticsearch
 ```
 
