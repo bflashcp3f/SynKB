@@ -140,7 +140,7 @@
                             <input name="q" type="text" class="form-control" value="{{query}}"> <br>
                         {% endif %}
 
-                        <h5><u> Other setups:</u></h5>
+                        <!-- <h5><u> Other setups:</u></h5>
                         <p>
                         Which corpus would you like to search from?
                         <select name="corpus_src">
@@ -152,7 +152,7 @@
                               <option>Chemical patents</option>
                             {% endif %}
                         </select>
-                        </p>
+                        </p> -->
                       <button type='submit' class="btn btn-primary">Search</button>
                     </form>
                     <form action="{% url 'download_results' %}" method="get">
