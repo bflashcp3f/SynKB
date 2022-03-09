@@ -87,26 +87,49 @@ def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
 
                 if chemu_item == 'product': # There should be only one product for each procedure
                     if chemu_value:
+
+                        if chemu_value not in AGGREGATE_CHAR:
+                            chemu_entities = [item.lower() for item in chemu_value.split() if item.lower() not in ['and', 'or']]
+                        else:
+                            chemu_entities = []
+
                         if chemu_item in each_hit and len(each_hit[chemu_item].split("::")) == 3:
 
                             each_hit_str, each_hit_ent_start, each_hit_ent_end = each_hit[chemu_item].split("::")
-                            chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
-                            chemu_flag[chemu_item] = True
+
+                            if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])):
+                                chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
+                                chemu_flag[chemu_item] = True
+                            else:
+                                raise
                         else:
                             raise
                 else:
                     if chemu_value:
+
+                        if chemu_value not in AGGREGATE_CHAR:
+                            chemu_entities = [item.lower() for item in chemu_value.split() if item.lower() not in ['and', 'or']]
+                        else:
+                            chemu_entities = []
+
                         if chemu_item in each_hit and each_hit[chemu_item] != "":
                             each_hit_item_list = each_hit[chemu_item].split(" %%%%% ")
                             each_hit_str_ent_list = []
 
                             for each_hit_item in each_hit_item_list:
                                 each_hit_item_str, each_hit_item_ent_start, each_hit_item_ent_end = each_hit_item.split("::")
+
+                                if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])) == False:
+                                    continue
+
                                 each_hit_item_ent_start, each_hit_item_ent_end = int(each_hit_item_ent_start), int(each_hit_item_ent_end)
                                 each_hit_str_ent_list.append([each_hit_item_ent_start, each_hit_item_ent_end, each_hit_item_str])
 
-                            chemu_ent_str_ent[chemu_item] = each_hit_str_ent_list
-                            chemu_flag[chemu_item] = True
+                            if each_hit_str_ent_list:
+                                chemu_ent_str_ent[chemu_item] = each_hit_str_ent_list
+                                chemu_flag[chemu_item] = True
+                            else:
+                                raise
                         else:
                             raise
         except:
@@ -237,37 +260,51 @@ def aggregate_captures_es_ids(odin_results, chemu_input, capture_num=50):
 
                     if chemu_item == 'product':
                         if chemu_value:
-                            if chemu_item in es_id_dict[docid] and \
-                                    chemu_value in es_id_dict[docid][chemu_item] and len(
-                                es_id_dict[docid][chemu_item].split("::")) == 3:
 
-                                each_hit_str, each_hit_ent_start, each_hit_ent_end = es_id_dict[docid][
-                                    chemu_item].split(
-                                    "::")
-                                chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end),
-                                                                 each_hit_str]
-                                chemu_flag[chemu_item] = True
+                            if chemu_value not in AGGREGATE_CHAR:
+                                chemu_entities = [item.lower() for item in chemu_value.split() if
+                                                  item.lower() not in ['and', 'or']]
+                            else:
+                                chemu_entities = []
+
+                            if chemu_item in es_id_dict[docid] and len(es_id_dict[docid][chemu_item].split("::")) == 3:
+                                each_hit_str, each_hit_ent_start, each_hit_ent_end = es_id_dict[docid][chemu_item].split("::")
+
+                                if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])):
+                                    chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
+                                    chemu_flag[chemu_item] = True
+                                else:
+                                    raise
                             else:
                                 raise
                     else:
 
                         if chemu_value:
-                            if chemu_item in es_id_dict[docid] and \
-                                    chemu_value in es_id_dict[docid][chemu_item] and es_id_dict[docid][
-                                chemu_item] != "":
+
+                            if chemu_value not in AGGREGATE_CHAR:
+                                chemu_entities = [item.lower() for item in chemu_value.split() if
+                                                  item.lower() not in ['and', 'or']]
+                            else:
+                                chemu_entities = []
+
+                            if chemu_item in es_id_dict[docid] and es_id_dict[docid][chemu_item] != "":
                                 each_hit_item_list = es_id_dict[docid][chemu_item].split(" %%%%% ")
                                 each_hit_str_ent_list = []
 
                                 for each_hit_item in each_hit_item_list:
-                                    each_hit_item_str, each_hit_item_ent_start, each_hit_item_ent_end = each_hit_item.split(
-                                        "::")
-                                    each_hit_item_ent_start, each_hit_item_ent_end = int(
-                                        each_hit_item_ent_start), int(each_hit_item_ent_end)
-                                    each_hit_str_ent_list.append(
-                                        [each_hit_item_ent_start, each_hit_item_ent_end, each_hit_item_str])
+                                    each_hit_item_str, each_hit_item_ent_start, each_hit_item_ent_end = each_hit_item.split("::")
 
-                                chemu_ent_str_ent[chemu_item] = each_hit_str_ent_list
-                                chemu_flag[chemu_item] = True
+                                    if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])) == False:
+                                        continue
+
+                                    each_hit_item_ent_start, each_hit_item_ent_end = int(each_hit_item_ent_start), int(each_hit_item_ent_end)
+                                    each_hit_str_ent_list.append([each_hit_item_ent_start, each_hit_item_ent_end, each_hit_item_str])
+
+                                if each_hit_str_ent_list:
+                                    chemu_ent_str_ent[chemu_item] = each_hit_str_ent_list
+                                    chemu_flag[chemu_item] = True
+                                else:
+                                    raise
                             else:
                                 raise
             except:
