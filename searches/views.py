@@ -1,7 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q # new
 
@@ -14,6 +11,7 @@ import requests
 from collections import Counter, defaultdict
 from django.http import HttpResponse
 
+from elasticsearch import Elasticsearch
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -38,7 +36,15 @@ def build_odinson_query_w_meta(input_str, chemu_filter):
     meta_query_list = []
     for filter_name, filter_value in chemu_filter.items():
         if filter_value and filter_value not in AGGREGATE_CHAR:
-            meta_query = f"{filter_name} contains '{filter_value}'"
+            if " AND " in filter_value:
+                filter_value = " ".join(filter_value.replace("AND", " ").split())
+                meta_query = f"{filter_name} contains '{filter_value}'"
+            elif " OR " in filter_value:
+                filter_value_list = [f"{filter_name} contains '{item.strip()}'" for item in filter_value.split("OR")]
+                meta_query = " or ".join(filter_value_list)
+                # meta_query = f"({meta_query})"
+            else:
+                meta_query = f"{filter_name} contains '{filter_value}'"
             meta_query_list.append(meta_query)
     meta_query_all = " and ".join(meta_query_list)
 
@@ -63,6 +69,20 @@ def build_elasticsearch_query(chemu_input):
     parameter_str = "%20AND%20".join(parameter_list)
 
     return f"http://localhost:9200/chemu/_search?q={parameter_str}&size=10000"
+
+
+def build_elasticsearch_query_client(chemu_input):
+
+    parameter_list = []
+    for chemu_item, chemu_value in chemu_input.items():
+        if chemu_value and chemu_value not in AGGREGATE_CHAR:
+
+            if " AND " in chemu_value:
+                chemu_value = " ".join(chemu_value.replace("AND", " ").split())
+                parameter_list.append({"match": {chemu_item: {"query": chemu_value, "operator": "AND"}}})
+            else:
+                parameter_list.append({"match": {chemu_item: chemu_value}})
+    return {"query": {"bool": {"must": parameter_list}}}
 
 
 def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
@@ -97,7 +117,7 @@ def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
 
                             each_hit_str, each_hit_ent_start, each_hit_ent_end = each_hit[chemu_item].split("::")
 
-                            if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])):
+                            if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()+each_hit_item_str.split("-")])):
                                 chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
                                 chemu_flag[chemu_item] = True
                             else:
@@ -119,7 +139,7 @@ def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
                             for each_hit_item in each_hit_item_list:
                                 each_hit_item_str, each_hit_item_ent_start, each_hit_item_ent_end = each_hit_item.split("::")
 
-                                if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])) == False:
+                                if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()+each_hit_item_str.split("-")])) == False:
                                     continue
 
                                 each_hit_item_ent_start, each_hit_item_ent_end = int(each_hit_item_ent_start), int(each_hit_item_ent_end)
@@ -270,7 +290,7 @@ def aggregate_captures_es_ids(odin_results, chemu_input, capture_num=50):
                             if chemu_item in es_id_dict[docid] and len(es_id_dict[docid][chemu_item].split("::")) == 3:
                                 each_hit_str, each_hit_ent_start, each_hit_ent_end = es_id_dict[docid][chemu_item].split("::")
 
-                                if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])):
+                                if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()+each_hit_item_str.split("-")])):
                                     chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
                                     chemu_flag[chemu_item] = True
                                 else:
@@ -294,7 +314,7 @@ def aggregate_captures_es_ids(odin_results, chemu_input, capture_num=50):
                                 for each_hit_item in each_hit_item_list:
                                     each_hit_item_str, each_hit_item_ent_start, each_hit_item_ent_end = each_hit_item.split("::")
 
-                                    if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()])) == False:
+                                    if chemu_value not in AGGREGATE_CHAR and bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()+each_hit_item_str.split("-")])) == False:
                                         continue
 
                                     each_hit_item_ent_start, each_hit_item_ent_end = int(each_hit_item_ent_start), int(each_hit_item_ent_end)
@@ -378,6 +398,9 @@ def search_results(request, download=False):
     # cap_num = int(request.GET.get("cap_num", 10)) if request.GET.get("cap_num") else 10
     cap_num = 100000000 # Setting the number of captures to a very high number to avoid the limit of the API
 
+    # Set up the elasticsearch client
+    elastic_client = Elasticsearch(hosts=["localhost:9200"])
+
     # ChEMU filters
     product_str = request.GET.get("product", None)
     reagent_str = request.GET.get('reagent', None)
@@ -407,9 +430,17 @@ def search_results(request, download=False):
 
         # Check whether the source is PubMed or ChemU filters are empty
         if not (corpus_src == "PubMed articles") and chemu_filter_flag:
-            elasticsearch_query = build_elasticsearch_query(chemu_filter)
-            r_elastic = requests.get(elasticsearch_query)
-            elastic_results = [each_hit['_source'] for each_hit in r_elastic.json()['hits']['hits']]
+
+            # # Query the ChemU database via requests
+            # elasticsearch_query = build_elasticsearch_query(chemu_filter)
+            # r_elastic = requests.get(elasticsearch_query)
+            # elastic_results = [each_hit['_source'] for each_hit in r_elastic.json()['hits']['hits']]
+
+            # Query the ChemU database via elasticsearch function
+            elasticsearch_query = build_elasticsearch_query_client(chemu_filter)
+            r_elastic = elastic_client.search(index="chemu", body=elasticsearch_query, size=10000)
+            elastic_results = [each_hit['_source'] for each_hit in r_elastic['hits']['hits']]
+
             captures_list, captures_sen_list = aggregate_captures_es_only(elastic_results, chemu_filter, cap_num)
         else:
             captures_list, captures_sen_list = [], []
