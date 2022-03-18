@@ -49,7 +49,7 @@ sbt backend/run
 
 ### Set up Elasticsearch
 
-1. Download Elasticsearch folder including data bucks ([elastic_data.tar.gz](https://drive.google.com/file/d/1eie6pEMN31n3D7R3mOOrz420s-2YVfSW/view?usp=sharing)) and extract files.
+1. Download Elasticsearch folder ([elastic_data.tar.gz](https://drive.google.com/file/d/1eie6pEMN31n3D7R3mOOrz420s-2YVfSW/view?usp=sharing)), and extract files.
 ```
 tar -xvzf elastic_data.tar.gz
 ```
