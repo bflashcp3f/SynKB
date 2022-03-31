@@ -36,7 +36,7 @@ mkdir -p extra/data/pets/
 cd extra/data/pets/
 ```
 
-3. Download indexed data ([index.tar.gz](https://drive.google.com/file/d/1ZOqvuPqftbaIAI_omQb8R53Mrr21YEWk/view?usp=sharing)) and extract files
+3. Download indexed data ([index.tar.gz](https://www.dropbox.com/s/3u6x1ixxb5oyrxq/index.tar.gz?dl=0)) and extract files
 ```
 tar -xvzf index.tar.gz
 ```
@@ -49,7 +49,7 @@ sbt backend/run
 
 ### Set up Elasticsearch
 
-1. Download Elasticsearch folder ([elastic_data.tar.gz](https://drive.google.com/file/d/1eie6pEMN31n3D7R3mOOrz420s-2YVfSW/view?usp=sharing)), and extract files.
+1. Download Elasticsearch folder ([elastic_data.tar.gz](https://www.dropbox.com/s/1hxi7iobjk2rz9v/elastic_data.tar.gz?dl=0)), and extract files.
 ```
 tar -xvzf elastic_data.tar.gz
 ```
