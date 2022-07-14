@@ -117,7 +117,7 @@ def aggregate_captures_es_only(es_results, chemu_input, capture_num=50):
 
                             each_hit_str, each_hit_ent_start, each_hit_ent_end = each_hit[chemu_item].split("::")
 
-                            if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_item_str.split()+each_hit_item_str.split("-")])):
+                            if (chemu_value in AGGREGATE_CHAR and len(each_hit_str.strip()) > 2) or bool(set(chemu_entities) & set([item.lower() for item in each_hit_str.split()+each_hit_str.split("-")])):
                                 chemu_ent_str_ent[chemu_item] = [int(each_hit_ent_start), int(each_hit_ent_end), each_hit_str]
                                 chemu_flag[chemu_item] = True
                             else:
