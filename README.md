@@ -7,7 +7,7 @@ SYNKB is an open-source web-based search engine that allows users, like chemists
 a large corpus of synthesis procedures extracted from chemical patents.
 
 Demo URL: [https://tinyurl.com/synkb](https://tinyurl.com/synkb)\
-Introduction video: [https://screencast-o-matic.com/watch/c3n6DTVDSTY](https://screencast-o-matic.com/watch/c3n6DTVDSTY)
+Introduction video: [https://screencast-o-matic.com/watch/c3jVQsVZwOV](https://screencast-o-matic.com/watch/c3jVQsVZwOV)
 
 ## Installation
 <!-- To enable all search features, we need to set up Odinson and Elasticsearch in the backend. -->
