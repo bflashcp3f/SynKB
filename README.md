@@ -1,6 +1,14 @@
 # SynKB: Semantic Search for Chemical Synthesis Procedures
 
-This repo provides the code and data to replicate our demo system SynKB.
+This repo provides the code and data to replicate our system ["SynKB: Semantic Search for Synthetic Procedures"](https://arxiv.org/abs/2208.07400).
+```
+@article{bai-etal-2022-synkb,
+  title={SynKB: Semantic Search for Synthetic Procedures},
+  author={Bai, Fan and Ritter, Alan and Madrid, Peter and Freitag, Dayne and Niekrasz, John},
+  journal={arXiv preprint arXiv:2208.07400},
+  year={2022}
+}
+```
 
 ## System Overview
 SYNKB is an open-source web-based search engine that allows users, like chemists, to perform structured queries over 
