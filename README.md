@@ -1,6 +1,6 @@
 # SynKB: Semantic Search for Chemical Synthesis Procedures
 
-This repo provides the code and data to replicate our system ["SynKB: Semantic Search for Synthetic Procedures"](https://arxiv.org/abs/2208.07400).
+This repo provides the code and data to replicate our system ["SynKB: Semantic Search for Synthetic Procedures"](https://arxiv.org/abs/2208.07400), which is accepted to EMNLP 2022 Demo track.
 ```
 @article{bai-etal-2022-synkb,
   title={SynKB: Semantic Search for Synthetic Procedures},
