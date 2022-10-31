@@ -77,3 +77,5 @@ cd SynKB
 python manage.py runserver YOUR_PORT_NUMBER
 ```
 
+## Customization
+If you want to customize SynKB for your own data, check out this [tutorial](./custom/README.md).
