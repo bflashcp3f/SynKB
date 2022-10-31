@@ -26,3 +26,36 @@ Note that, if you change `--index_name` in the command, you need to update the `
 cd SynKB
 python manage.py runserver 0.0.0.0:YOUR_PORT
 ```
+
+## Semantic Graph Search
+
+### 1. Prepare your data
+Format your semantic graph data as [semantic_graph_sample.json](./semantic_graph_sample.json).
+
+### 2. Convert your data into pre-indexed Odinson format
+```
+python convert_odinson_format.py --input_file semantic_graph_sample.json --output_dir OUPUT_DIR
+```
+
+### 3. Set up Odinson (Java 11 is required)
+```
+git clone https://github.com/bflashcp3f/odinson.git
+cd odinson
+git checkout synkb
+```
+
+### 4. Set up pre-indexed data
+```
+mkdir -p extra/data/pets/docs
+mv PRE-INDEXED_DATA/* extra/data/pets/docs
+```
+
+### 5. Index your data 
+```
+sbt "extra/runMain ai.lum.odinson.extra.IndexDocuments"
+```
+
+### 6. Launch Odinson
+```
+sbt backend/run
+```
